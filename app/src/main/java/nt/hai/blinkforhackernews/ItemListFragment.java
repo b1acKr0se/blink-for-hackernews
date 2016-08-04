@@ -9,8 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.data.remote.HNClient;
 import nt.hai.blinkforhackernews.view.adapter.ItemAdapter;
+import nt.hai.blinkforhackernews.view.custom.SimpleDividerItemDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,6 +23,7 @@ import retrofit2.Response;
 public class ItemListFragment extends Fragment {
     private RecyclerView recyclerView;
     private int[] responseId;
+    private List<Item> itemList = new ArrayList<>();
     private ItemAdapter adapter;
 
     public ItemListFragment() {
@@ -37,6 +43,13 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onResponse(Call<int[]> call, Response<int[]> response) {
                 responseId = response.body();
+                if (responseId == null)
+                    return;
+                for (int aResponseId : responseId) {
+                    Item item = new Item();
+                    item.setId(String.valueOf(aResponseId));
+                    itemList.add(item);
+                }
                 showList();
             }
 
@@ -49,8 +62,9 @@ public class ItemListFragment extends Fragment {
     }
 
     private void showList() {
-        adapter = new ItemAdapter(getContext(), responseId);
+        adapter = new ItemAdapter(getContext(), itemList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
         recyclerView.setAdapter(adapter);
     }
 

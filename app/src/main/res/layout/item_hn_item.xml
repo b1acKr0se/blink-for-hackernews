@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/item_id"
+    <nt.hai.blinkforhackernews.view.custom.MultiSizeTextView
+        android:id="@+id/item_title_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:padding="8dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/item_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:text="•"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/item_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_upvote"
+            android:drawablePadding="2dp"
+            android:drawableStart="@drawable/ic_upvote"
+            android:drawableTint="@android:color/tab_indicator_text"
+            android:gravity="center_vertical"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/item_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_comment"
+            android:drawablePadding="2dp"
+            android:drawableStart="@drawable/ic_comment"
+            android:drawableTint="@android:color/tab_indicator_text"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -18,6 +18,8 @@ public class Item {
     private int[] parts;
     private int descendants;
 
+    private boolean isLoaded;
+
     public String getId() {
         return id;
     }
@@ -128,6 +130,14 @@ public class Item {
 
     public void setDescendants(int descendants) {
         this.descendants = descendants;
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
     }
 
     @Override
