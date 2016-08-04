@@ -1,5 +1,7 @@
 package nt.hai.blinkforhackernews.data.model;
 
+import java.util.Arrays;
+
 public class Item {
     private String id;
     private boolean deleted;
@@ -126,5 +128,25 @@ public class Item {
 
     public void setDescendants(int descendants) {
         this.descendants = descendants;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", deleted=" + deleted +
+                ", type='" + type + '\'' +
+                ", by='" + by + '\'' +
+                ", time=" + time +
+                ", text='" + text + '\'' +
+                ", dead=" + dead +
+                ", parent=" + parent +
+                ", kids=" + Arrays.toString(kids) +
+                ", url='" + url + '\'' +
+                ", score=" + score +
+                ", title='" + title + '\'' +
+                ", parts=" + Arrays.toString(parts) +
+                ", descendants=" + descendants +
+                '}';
     }
 }
