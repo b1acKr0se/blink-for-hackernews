@@ -4,4 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="title_text_size">16sp</dimen>
     <dimen name="link_text_size">10sp</dimen>
+    <dimen name="recycler_padding_bottom">56dp</dimen>
+    <dimen name="normal_padding_bottom">8dp</dimen>
+    <dimen name="coordinator_layout_padding_top">-25dp</dimen>
+    <dimen name="toolbar_container_padding_top">50dp</dimen>
 </resources>
