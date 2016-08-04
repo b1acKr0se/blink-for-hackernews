@@ -8,7 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HNClient {
-    public static final String BASE_URL = "https://hacker-news.firebaseio.com/v0/";
+    private static final String BASE_URL = "https://hacker-news.firebaseio.com/v0/";
     private static HNClient instance;
     private RetrofitClient retrofitClient;
 
