@@ -4,6 +4,8 @@ package nt.hai.blinkforhackernews;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,8 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ItemListFragment extends Fragment implements OnTitleClickListener {
+public class ItemListFragment extends Fragment implements OnTitleClickListener, SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private int[] responseId;
     private List<Item> itemList = new ArrayList<>();
     private ItemAdapter adapter;
@@ -41,9 +44,18 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         recyclerView.setClipToPadding(false);
         setUpPadding();
-        request();
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                onRefresh();
+            }
+        });
         return view;
     }
 
@@ -58,6 +70,7 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener {
     }
 
     private void request() {
+        recyclerView.setVisibility(View.GONE);
         Call<int[]> call = HNClient.getInstance().getTopStories();
         call.enqueue(new Callback<int[]>() {
             @Override
@@ -65,6 +78,7 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener {
                 responseId = response.body();
                 if (responseId == null)
                     return;
+                itemList.clear();
                 for (int aResponseId : responseId) {
                     Item item = new Item();
                     item.setId(String.valueOf(aResponseId));
@@ -75,16 +89,24 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener {
 
             @Override
             public void onFailure(Call<int[]> call, Throwable t) {
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
         });
     }
 
     private void showList() {
-        adapter = new ItemAdapter(getContext(), itemList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
-        recyclerView.setAdapter(adapter);
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+        recyclerView.setVisibility(View.VISIBLE);
+        if (adapter == null) {
+            adapter = new ItemAdapter(getContext(), itemList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
+            recyclerView.setAdapter(adapter);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -95,5 +117,10 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener {
     @Override
     public void onTitleClick() {
         recyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void onRefresh() {
+        request();
     }
 }

@@ -22,9 +22,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView appNameTextView = (TextView) findViewById(R.id.app_title);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "azurite.ttf");
         appNameTextView.setTypeface(typeface);
+        appNameTextView.setText(getString(R.string.app_name));
         appNameTextView.setOnClickListener(this);
         setUpPadding();
         showListFragment();
