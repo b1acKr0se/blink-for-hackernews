@@ -25,7 +25,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Item item) {
-        if (item.getTitle() == null) {
+        if (!item.isLoaded()) {
            titleAndLinkTextView.setTitle("-").setLink(UrlUtils.getHostName("-")).draw();
             authorTextView.setText("-");
             timeTextView.setText("-");

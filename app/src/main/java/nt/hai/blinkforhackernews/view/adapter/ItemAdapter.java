@@ -32,7 +32,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         Item item = items.get(position);
-        Log.i("TAG"     , "onBindViewHolder: " + item.getTitle() + " " + position);
         holder.bind(item);
         if (!item.isLoaded())
             HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {

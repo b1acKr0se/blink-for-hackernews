@@ -60,7 +60,7 @@ public class MultiSizeTextView extends TextView {
 
     public void draw() {
         if (title == null) {
-            setText("---------------");
+            setText("");
             return;
         }
         SpannableString span1 = new SpannableString(title);
