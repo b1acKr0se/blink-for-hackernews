@@ -18,7 +18,6 @@ public class Item implements Serializable {
     private String title;
     private int[] parts;
     private int descendants;
-
     private boolean isLoaded;
 
     public String getId() {
