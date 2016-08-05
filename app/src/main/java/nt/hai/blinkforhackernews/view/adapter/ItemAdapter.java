@@ -10,6 +10,7 @@ import java.util.List;
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.data.remote.HNClient;
+import nt.hai.blinkforhackernews.view.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,10 +18,15 @@ import retrofit2.Response;
 public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private Context context;
     private List<Item> items;
+    private ItemClickListener itemClickListener;
 
     public ItemAdapter(Context context, List<Item> items) {
         this.context = context;
         this.items = items;
+    }
+
+    public void setItemClickListener(ItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     @Override
@@ -31,7 +37,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         Item item = items.get(position);
-        holder.bind(item);
+        holder.bind(item, position, itemClickListener);
         if (!item.isLoaded())
             HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {
                 @Override

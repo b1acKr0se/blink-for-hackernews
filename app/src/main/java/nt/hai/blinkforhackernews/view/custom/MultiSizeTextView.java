@@ -49,7 +49,8 @@ public class MultiSizeTextView extends TextView {
     }
 
     public MultiSizeTextView setLink(String link) {
-        this.link = "(" + link + ")";
+        if (TextUtils.isEmpty(link)) this.link = "";
+        else this.link = "(" + link + ")";
         return this;
     }
 

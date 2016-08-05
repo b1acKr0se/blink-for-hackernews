@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import nt.hai.blinkforhackernews.utility.HardwareUtils;
 import nt.hai.blinkforhackernews.view.OnTitleClickListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

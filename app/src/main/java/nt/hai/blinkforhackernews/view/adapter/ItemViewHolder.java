@@ -8,12 +8,14 @@ import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.utility.DateUtils;
 import nt.hai.blinkforhackernews.utility.UrlUtils;
+import nt.hai.blinkforhackernews.view.ItemClickListener;
 import nt.hai.blinkforhackernews.view.custom.MultiSizeTextView;
 
-class ItemViewHolder extends RecyclerView.ViewHolder {
+class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private MultiSizeTextView titleAndLinkTextView;
     private TextView authorTextView, timeTextView, scoreTextView, commentTextView;
-
+    private ItemClickListener listener;
+    private int position;
 
     ItemViewHolder(View itemView) {
         super(itemView);
@@ -24,19 +26,27 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
         commentTextView = (TextView) itemView.findViewById(R.id.item_comment);
     }
 
-    void bind(Item item) {
+    void bind(Item item, int position, ItemClickListener listener) {
+        this.listener = listener;
+        this.position = position;
         if (!item.isLoaded()) {
-           titleAndLinkTextView.setTitle("-").setLink(UrlUtils.getHostName("-")).draw();
+            titleAndLinkTextView.setTitle("-").setLink(UrlUtils.getHostName("-")).draw();
             authorTextView.setText("-");
             timeTextView.setText("-");
             scoreTextView.setText("-");
             commentTextView.setText("-");
             return;
         }
+        itemView.setOnClickListener(this);
         titleAndLinkTextView.setTitle(item.getTitle()).setLink(UrlUtils.getHostName(item.getUrl())).draw();
         authorTextView.setText(item.getBy());
         timeTextView.setText(DateUtils.getReadableDate(item.getTime()));
         scoreTextView.setText(String.valueOf(item.getScore()));
         commentTextView.setText(String.valueOf(item.getDescendants()));
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (listener != null) listener.onItemClick(position);
     }
 }
