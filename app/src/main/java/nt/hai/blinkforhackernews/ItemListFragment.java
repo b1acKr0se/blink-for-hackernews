@@ -18,6 +18,8 @@ import java.util.List;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.data.remote.HNClient;
 import nt.hai.blinkforhackernews.utility.HardwareUtils;
+import nt.hai.blinkforhackernews.view.DetailActivity;
+import nt.hai.blinkforhackernews.view.ItemClickListener;
 import nt.hai.blinkforhackernews.view.OnTitleClickListener;
 import nt.hai.blinkforhackernews.view.adapter.ItemAdapter;
 import nt.hai.blinkforhackernews.view.custom.SimpleDividerItemDecoration;
@@ -25,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ItemListFragment extends Fragment implements OnTitleClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class ItemListFragment extends Fragment implements OnTitleClickListener, SwipeRefreshLayout.OnRefreshListener, ItemClickListener {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int[] responseId;
@@ -102,16 +104,13 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener, 
         recyclerView.setVisibility(View.VISIBLE);
         if (adapter == null) {
             adapter = new ItemAdapter(getContext(), itemList);
+            adapter.setItemClickListener(this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
+            recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
         }
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override
@@ -122,5 +121,12 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener, 
     @Override
     public void onRefresh() {
         request();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Item item = itemList.get(position);
+        if (!item.isLoaded()) return;
+        DetailActivity.navigate(getContext(), item);
     }
 }

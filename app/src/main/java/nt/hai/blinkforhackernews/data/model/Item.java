@@ -1,8 +1,9 @@
 package nt.hai.blinkforhackernews.data.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Item {
+public class Item implements Serializable {
     private String id;
     private boolean deleted;
     private String type;

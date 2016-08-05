@@ -3,4 +3,5 @@
     <color name="colorPrimary">#FF6501</color>
     <color name="colorPrimaryDark">#c24e01</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="gray">@android:color/tab_indicator_text</color>
 </resources>
