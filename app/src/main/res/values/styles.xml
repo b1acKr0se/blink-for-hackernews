@@ -16,5 +16,18 @@
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
     </style>
 
+    <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:titleTextStyle">@style/Toolbar.TitleText</item>
+        <item name="android:subtitleTextStyle">@style/Toolbar.SubtitleText</item>
+    </style>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Toolbar.SubtitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">13sp</item>
+    </style>
 </resources>

@@ -6,16 +6,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.utility.HardwareUtils;
 
-public class WebFragment extends Fragment {
+public class WebFragment extends Fragment implements OnBackActionListener {
     private View webViewContainer;
     private WebView webView;
     private OnUrlLoadingListener listener;
+    private OnTitleChangeListener onTitleChangeListener;
+    private OnBackActionCallback onBackActionCallback;
     private String url;
 
     public WebFragment() {
@@ -34,16 +37,31 @@ public class WebFragment extends Fragment {
         this.listener = listener;
     }
 
+    void setOnTitleChangeListener(OnTitleChangeListener listener) {
+        this.onTitleChangeListener = listener;
+    }
+
+    void setOnBackActionCallback(OnBackActionCallback callback) {
+        this.onBackActionCallback = callback;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web, container, false);
         webView = (WebView) view.findViewById(R.id.web_view);
-        webViewContainer =  view.findViewById(R.id.web_view_container);
+        webViewContainer = view.findViewById(R.id.web_view_container);
         url = getArguments().getString("url");
+        changeTitle(null, url);
         setUpPadding();
         setupWebView();
         return view;
+    }
+
+    private void changeTitle(String title, String subtitle) {
+        if (onTitleChangeListener == null)
+            return;
+        onTitleChangeListener.onTitleChange(title, subtitle);
     }
 
     private void setUpPadding() {
@@ -56,7 +74,6 @@ public class WebFragment extends Fragment {
         }
     }
 
-
     private void setupWebView() {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -65,7 +82,16 @@ public class WebFragment extends Fragment {
         webSettings.setBuiltInZoomControls(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setWebChromeClient(new HNWebChromeClient(listener));
-        webView.setWebViewClient(new HNWebViewClient());
+        webView.setWebViewClient(new HNWebViewClient(onTitleChangeListener));
         webView.loadUrl(url);
+    }
+
+    @Override
+    public void onBack() {
+        WebBackForwardList mWebBackForwardList = webView.copyBackForwardList();
+        if (mWebBackForwardList.getCurrentIndex() > 0)
+            webView.loadUrl(mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex() - 1).getUrl());
+        else
+            onBackActionCallback.onCallback();
     }
 }
