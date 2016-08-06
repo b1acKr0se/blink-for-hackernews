@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
@@ -22,17 +21,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:theme="@style/ToolbarStyle"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                <TextView
-                    android:id="@+id/app_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/white"
-                    android:textSize="30sp"/>
             </android.support.v7.widget.Toolbar>
         </FrameLayout>
 
@@ -43,14 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <nt.hai.blinkforhackernews.view.custom.CircularProgressLayout
         android:id="@+id/button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_behavior="nt.hai.blinkforhackernews.view.custom.CircularProgressLayoutBehavior"
-        android:layout_gravity="bottom|right">
+        android:layout_gravity="bottom|right"
+        app:layout_behavior="nt.hai.blinkforhackernews.view.custom.CircularProgressLayoutBehavior">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -62,7 +53,7 @@
             android:indeterminate="false"
             android:max="100"
             android:progress="0"
-            android:progressDrawable="@drawable/progress_bar_drawable"/>
+            android:progressDrawable="@drawable/progress_bar_drawable" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floating_action_button"
@@ -71,7 +62,7 @@
             android:layout_gravity="center"
             android:layout_margin="24dp"
             android:src="@drawable/ic_comment_24dp"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white" />
     </nt.hai.blinkforhackernews.view.custom.CircularProgressLayout>
 
 
