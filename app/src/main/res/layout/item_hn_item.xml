@@ -53,10 +53,9 @@
             android:id="@+id/item_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_upvote"
+            android:drawableLeft="?attr/themedUpvoteDrawable"
             android:drawablePadding="2dp"
-            android:drawableStart="@drawable/ic_upvote"
-            android:drawableTint="@color/gray"
+            android:drawableStart="?attr/themedUpvoteDrawable"
             android:gravity="center_vertical"
             android:textSize="11sp"/>
 
@@ -64,10 +63,9 @@
             android:id="@+id/item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_comment"
+            android:drawableLeft="?attr/themedCommentDrawable"
             android:drawablePadding="2dp"
-            android:drawableStart="@drawable/ic_comment"
-            android:drawableTint="@color/gray"
+            android:drawableStart="?attr/themedCommentDrawable"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:textSize="11sp"/>
