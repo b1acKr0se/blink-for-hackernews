@@ -3,6 +3,8 @@ package nt.hai.blinkforhackernews.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -16,6 +18,8 @@ import nt.hai.blinkforhackernews.R;
 public class MultiSizeTextView extends TextView {
     private int titleTextSize = -1;
     private int linkTextSize = -1;
+    private int titleColor;
+    private int linkColor;
     private String title;
     private String link;
 
@@ -57,6 +61,13 @@ public class MultiSizeTextView extends TextView {
     private void init() {
         titleTextSize = getResources().getDimensionPixelSize(R.dimen.title_text_size);
         linkTextSize = getResources().getDimensionPixelSize(R.dimen.link_text_size);
+        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("pref_dark_theme", false)) {
+            titleColor = R.color.textColorPrimary;
+            linkColor = R.color.textColorSecondaryInverse;
+            return;
+        }
+        titleColor = R.color.textColorPrimaryInverse;
+        linkColor = R.color.textColorSecondary;
     }
 
     public void draw() {
@@ -66,9 +77,10 @@ public class MultiSizeTextView extends TextView {
         }
         SpannableString span1 = new SpannableString(title);
         span1.setSpan(new AbsoluteSizeSpan(titleTextSize), 0, title.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        span1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, title.length(), 0);
+        span1.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), titleColor)), 0, title.length(), 0);
         SpannableString span2 = new SpannableString(link);
         span2.setSpan(new AbsoluteSizeSpan(linkTextSize), 0, link.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        span2.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), linkColor)), 0, link.length(), 0);
         CharSequence finalText = TextUtils.concat(span1, " ", span2);
         setText(finalText);
     }

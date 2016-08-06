@@ -14,4 +14,7 @@
     </declare-styleable>
 
     <attr name="SwipeBackLayoutStyle" format="reference"/>
+
+    <attr name="themedUpvoteDrawable" format="reference" />
+    <attr name="themedCommentDrawable" format="reference" />
 </resources>

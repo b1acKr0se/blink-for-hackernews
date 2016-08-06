@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="gray">@android:color/tab_indicator_text</color>
     <color name="indiego_500">#2196F3</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#9E9E9E</color>
+    <color name="textColorPrimaryInverse">#DE000000</color>
+    <color name="textColorSecondaryInverse">#9E9E9E</color>
 </resources>

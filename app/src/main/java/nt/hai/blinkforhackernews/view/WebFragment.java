@@ -1,5 +1,6 @@
 package nt.hai.blinkforhackernews.view;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -80,6 +81,7 @@ public class WebFragment extends Fragment implements OnBackActionListener {
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setBuiltInZoomControls(true);
+        webView.setBackgroundColor(Color.TRANSPARENT);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setWebChromeClient(new HNWebChromeClient(listener));
         webView.setWebViewClient(new HNWebViewClient(onTitleChangeListener));
