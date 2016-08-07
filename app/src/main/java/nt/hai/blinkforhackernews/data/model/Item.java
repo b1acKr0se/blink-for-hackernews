@@ -19,6 +19,7 @@ public class Item implements Serializable {
     private int[] parts;
     private int descendants;
     private boolean isLoaded;
+    private int level;
 
     public String getId() {
         return id;
@@ -140,6 +141,33 @@ public class Item implements Serializable {
         isLoaded = loaded;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void copy(Item item) {
+        id = item.getId();
+        deleted = item.isDeleted();
+        type = item.getType();
+        by = item.getBy();
+        time = item.getTime();
+        text = item.getText();
+        dead = item.isDead();
+        parent = item.getParent();
+        kids = item.getKids();
+        url = item.getUrl();
+        score = item.getScore();
+        title = item.getTitle();
+        parts = item.getParts();
+        descendants = item.getDescendants();
+        isLoaded = item.isLoaded();
+        level = item.getLevel();
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -158,5 +186,10 @@ public class Item implements Serializable {
                 ", parts=" + Arrays.toString(parts) +
                 ", descendants=" + descendants +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return id.equals(((Item) obj).getId());
     }
 }

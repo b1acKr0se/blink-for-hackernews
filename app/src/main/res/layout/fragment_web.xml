@@ -19,5 +19,5 @@
             android:background="@android:color/transparent"
             android:clipToPadding="false"/>
     </FrameLayout>
-    
+
 </android.support.v4.widget.NestedScrollView>
