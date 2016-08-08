@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="color_codes">
+        <item>@color/level_0_pink</item>
+        <item>@color/level_1_indigo</item>
+        <item>@color/level_2_amber</item>
+        <item>@color/level_3_green</item>
+        <item>@color/level_4_orange</item>
+        <item>@color/level_5_purple</item>
+        <item>@color/level_6_cyan</item>
+        <item>@color/level_7_orange</item>
+        <item>@color/level_8_teal</item>
+        <item>@color/level_9_red</item>
+    </array>
+</resources>

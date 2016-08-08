@@ -55,7 +55,7 @@ public class CommentFragment extends Fragment {
                 comment.setLevel(0);
                 commentList.add(comment);
             }
-            CommentAdapter adapter = new CommentAdapter(getContext(), commentList);
+            adapter = new CommentAdapter(getContext(), commentList);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
