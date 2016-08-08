@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nt.hai.blinkforhackernews.R;
@@ -19,10 +20,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private Context context;
     private List<Item> items;
     private ItemClickListener itemClickListener;
+    private List<String> currentLoadingList;
 
     public ItemAdapter(Context context, List<Item> items) {
         this.context = context;
         this.items = items;
+        this.currentLoadingList = new ArrayList<>();
     }
 
     public void setItemClickListener(ItemClickListener listener) {
@@ -38,7 +41,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         Item item = items.get(position);
         holder.bind(item, position, itemClickListener);
-        if (!item.isLoaded())
+        if (!item.isLoaded() && !currentLoadingList.contains(item.getId())) {
+            currentLoadingList.add(item.getId());
             HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {
                 @Override
                 public void onResponse(Call<Item> call, Response<Item> response) {
@@ -46,6 +50,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                     responseItem.setLoaded(true);
                     items.set(position, responseItem);
                     notifyItemChanged(position);
+                    currentLoadingList.remove(responseItem.getId());
                 }
 
                 @Override
@@ -53,6 +58,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
                 }
             });
+        }
     }
 
     @Override

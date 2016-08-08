@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nt.hai.blinkforhackernews.R;
@@ -18,13 +19,14 @@ import retrofit2.Response;
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_COMMENT = 1;
-
+    private List<String> currentLoadingList;
     private List<Item> items;
     private Context context;
 
     public CommentAdapter(Context context, List<Item> list) {
         this.context = context;
         this.items = list;
+        this.currentLoadingList = new ArrayList<>();
     }
 
     @Override
@@ -44,7 +46,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final Item item = items.get(position);
         if (viewHolder instanceof CommentViewHolder) {
             CommentViewHolder holder = (CommentViewHolder) viewHolder;
@@ -55,13 +57,15 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             params.setMargins(marginValue, 0, 0, marginComment);
             holder.itemView.setLayoutParams(params);
             holder.bind(item);
-            if (!item.isLoaded())
+            if (!item.isLoaded() && !currentLoadingList.contains(item.getId())) {
+                currentLoadingList.add(item.getId());
                 HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {
                     @Override
                     public void onResponse(Call<Item> call, Response<Item> response) {
                         Item responseItem = response.body();
                         responseItem.setLoaded(true);
                         responseItem.setLevel(level);
+                        currentLoadingList.remove(responseItem.getId());
                         int currentPosition = items.indexOf(item);
                         items.set(currentPosition, responseItem);
                         notifyItemChanged(currentPosition);
@@ -85,6 +89,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                     }
                 });
+            }
         } else if (viewHolder instanceof ItemViewHolder) {
             ((ItemViewHolder) viewHolder).bind(item, 0, null);
         }
