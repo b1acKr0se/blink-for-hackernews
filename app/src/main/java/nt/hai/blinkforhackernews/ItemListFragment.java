@@ -106,7 +106,7 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener, 
             adapter = new ItemAdapter(getContext(), itemList);
             adapter.setItemClickListener(this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
+//            recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), null));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
         }

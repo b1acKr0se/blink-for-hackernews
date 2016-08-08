@@ -44,7 +44,7 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         buttonContainer = findViewById(R.id.button_container);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout) ;
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
@@ -74,12 +74,12 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
         webFragment.setOnTitleChangeListener(this);
         webFragment.setOnBackActionCallback(this);
         setOnBackActionListener(webFragment);
-        commentFragment = CommentFragment.newInstance(item.getTitle());
+        commentFragment = CommentFragment.newInstance(item);
         navigateToWeb();
     }
 
     void navigateToWeb() {
-            appBarLayout.setExpanded(true, true);
+        appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (webFragment != null && webFragment.isAdded())
@@ -92,7 +92,7 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     }
 
     void navigateToComment() {
-            appBarLayout.setExpanded(true, true);
+        appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (commentFragment != null && commentFragment.isAdded())
@@ -110,7 +110,7 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
 
     @Override
     public void onProgressChanged(int progress) {
-        progressBar.setVisibility(progress == 100 ? View.GONE : View.VISIBLE);
+        progressBar.setVisibility(progress == 100 ? View.INVISIBLE : View.VISIBLE);
         progressBar.setProgress(progress);
     }
 
