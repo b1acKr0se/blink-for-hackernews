@@ -3,6 +3,7 @@ package nt.hai.blinkforhackernews.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,5 +38,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         score.setText(String.valueOf(item.getScore()) + " pts");
         time.setText(DateUtils.getReadableDate(item.getTime()));
         content.setText(Html.fromHtml(item.getText() == null ? "" : item.getText()));
+        Linkify.addLinks(content, Linkify.ALL);
     }
 }
