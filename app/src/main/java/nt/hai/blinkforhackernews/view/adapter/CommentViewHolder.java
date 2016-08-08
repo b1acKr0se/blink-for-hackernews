@@ -1,7 +1,6 @@
 package nt.hai.blinkforhackernews.view.adapter;
 
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
@@ -9,8 +8,8 @@ import android.widget.TextView;
 
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
+import nt.hai.blinkforhackernews.utility.ColorCode;
 import nt.hai.blinkforhackernews.utility.DateUtils;
-import nt.hai.blinkforhackernews.utility.LevelUtils;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {
     private TextView author, score, time, content;
@@ -26,7 +25,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Item item) {
-        level.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), LevelUtils.getInstance().getColor(item.getLevel())));
+        level.setBackgroundColor(ColorCode.getInstance(itemView.getContext()).getColor(item.getLevel()));
         if (!item.isLoaded()) {
             author.setText("...");
             content.setText("...");
@@ -38,14 +37,5 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         score.setText(String.valueOf(item.getScore()) + " pts");
         time.setText(DateUtils.getReadableDate(item.getTime()));
         content.setText(Html.fromHtml(item.getText() == null ? "" : item.getText()));
-    }
-
-    public static CharSequence trimTrailingWhitespace(CharSequence source) {
-        if (source == null)
-            return "";
-        int i = source.length();
-        while (--i >= 0 && Character.isWhitespace(source.charAt(i))) {
-        }
-        return source.subSequence(0, i + 1);
     }
 }
