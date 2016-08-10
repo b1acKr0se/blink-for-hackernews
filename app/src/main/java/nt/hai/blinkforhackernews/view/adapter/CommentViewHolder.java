@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import nt.hai.blinkforhackernews.R;
@@ -18,10 +19,12 @@ import nt.hai.blinkforhackernews.utility.DateUtils;
 public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final StrikethroughSpan STRIKE_THROUGH_SPAN = new StrikethroughSpan();
     private TextView author, time, content, collapseNumber;
-    private View level;
+    public View level;
+    public View container;
     private Context context;
     private OnCommentClickListener onCommentClickListener;
     private Item item;
+    public LinearLayout menuArea;
 
 
     public CommentViewHolder(View view) {
@@ -32,6 +35,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         content = (TextView) view.findViewById(R.id.comment_content);
         level = view.findViewById(R.id.comment_level);
         collapseNumber = (TextView) view.findViewById(R.id.comment_collapse_item);
+        menuArea = (LinearLayout) view.findViewById(R.id.menuarea);
+        container = view.findViewById(R.id.container);
     }
 
     public void bind(Item item, OnCommentClickListener listener, int collapse) {
@@ -57,7 +62,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         content.setOnClickListener(this);
         if (!item.isExpanded() && item.getKids() != null) {
             collapseNumber.setVisibility(View.VISIBLE);
-            collapseNumber.setText(String.valueOf(collapse));
+            collapseNumber.setText("+" + String.valueOf(collapse));
         } else {
             collapseNumber.setVisibility(View.GONE);
         }

@@ -9,6 +9,7 @@
     <color name="textColorSecondary">#9E9E9E</color>
     <color name="textColorPrimaryInverse">#DE000000</color>
     <color name="textColorSecondaryInverse">#9E9E9E</color>
+    <color name="selected_background_comment">#28ff6501</color>
 
     <color name="level_0_pink">#FF4081</color>
     <color name="level_1_indigo">#2196F3</color>
