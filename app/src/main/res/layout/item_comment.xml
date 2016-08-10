@@ -25,35 +25,50 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/comment_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
                     android:paddingRight="4dp"
+                    android:textSize="13sp"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/comment_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/comment_author"
                     android:textSize="13sp"/>
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/comment_collapse_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:layout_gravity="end"
+                    android:background="@drawable/collapse_comment_background"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:background="?attr/selectableItemBackground"
                 android:autoLink="web"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 />
