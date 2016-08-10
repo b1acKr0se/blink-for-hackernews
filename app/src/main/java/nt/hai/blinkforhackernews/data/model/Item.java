@@ -20,6 +20,7 @@ public class Item implements Serializable {
     private int descendants;
     private boolean isLoaded;
     private int level;
+    private boolean isExpanded = true;
 
     public String getId() {
         return id;
@@ -149,6 +150,14 @@ public class Item implements Serializable {
         this.level = level;
     }
 
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
     public void copy(Item item) {
         id = item.getId();
         deleted = item.isDeleted();
@@ -166,6 +175,7 @@ public class Item implements Serializable {
         descendants = item.getDescendants();
         isLoaded = item.isLoaded();
         level = item.getLevel();
+        isExpanded = item.isExpanded();
     }
 
     @Override
