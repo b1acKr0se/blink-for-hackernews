@@ -60,7 +60,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
             params.setMargins(marginValue, 0, 0, marginComment);
             holder.itemView.setLayoutParams(params);
-            holder.bind(item, this);
+            holder.bind(item, this, collapsedItem.containsKey(item.getId()) ? collapsedItem.get(item.getId()).size() : 0);
             if (!item.isLoaded() && !currentLoadingList.contains(item.getId())) {
                 currentLoadingList.add(item.getId());
                 HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {

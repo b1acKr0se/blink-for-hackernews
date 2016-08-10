@@ -5,12 +5,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +17,7 @@ import nt.hai.blinkforhackernews.utility.DateUtils;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final StrikethroughSpan STRIKE_THROUGH_SPAN = new StrikethroughSpan();
-    private TextView author, time, content;
+    private TextView author, time, content, collapseNumber;
     private View level;
     private Context context;
     private OnCommentClickListener onCommentClickListener;
@@ -35,9 +31,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         time = (TextView) view.findViewById(R.id.comment_time);
         content = (TextView) view.findViewById(R.id.comment_content);
         level = view.findViewById(R.id.comment_level);
+        collapseNumber = (TextView) view.findViewById(R.id.comment_collapse_item);
     }
 
-    public void bind(Item item, OnCommentClickListener listener) {
+    public void bind(Item item, OnCommentClickListener listener, int collapse) {
         this.onCommentClickListener = listener;
         this.item = item;
         level.setBackgroundColor(ColorCode.getInstance(context).getColor(item.getLevel()));
@@ -58,6 +55,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         time.setText(DateUtils.getReadableDate(item.getTime()));
         content.setText(Html.fromHtml(item.getText() == null ? "" : item.getText()));
         content.setOnClickListener(this);
+        if (!item.isExpanded() && item.getKids() != null) {
+            collapseNumber.setVisibility(View.VISIBLE);
+            collapseNumber.setText(String.valueOf(collapse));
+        } else {
+            collapseNumber.setVisibility(View.GONE);
+        }
     }
 
     private void markDeleted(TextView timeTextView, String text) {
