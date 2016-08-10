@@ -57,7 +57,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         author.setText(item.getBy());
         time.setText(DateUtils.getReadableDate(item.getTime()));
         content.setText(Html.fromHtml(item.getText() == null ? "" : item.getText()));
-        Linkify.addLinks(content, Linkify.ALL);
+        content.setOnClickListener(this);
     }
 
     private void markDeleted(TextView timeTextView, String text) {
@@ -66,8 +66,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         spannable.setSpan(STRIKE_THROUGH_SPAN, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
+
     @Override
     public void onClick(View view) {
-        if (onCommentClickListener != null) onCommentClickListener.onCommentClick(item);
+        switch (view.getId()) {
+            case R.id.comment_content:
+                if (content.getSelectionStart() < 0 && content.getSelectionEnd() < 0) {
+                    if (onCommentClickListener != null) onCommentClickListener.onCommentClick(item);
+                }
+                break;
+            default:
+                if (onCommentClickListener != null) onCommentClickListener.onCommentClick(item);
+        }
     }
 }
