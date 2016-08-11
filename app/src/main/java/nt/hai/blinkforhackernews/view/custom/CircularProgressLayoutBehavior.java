@@ -35,7 +35,7 @@ public class CircularProgressLayoutBehavior extends CoordinatorLayout.Behavior<C
         if (dependency instanceof AppBarLayout) {
             int distanceToScroll = child.getHeight();
             float ratio = dependency.getY() / (float) toolbarHeight;
-            float translation = -distanceToScroll * (ratio + 0.38f);
+            float translation = -distanceToScroll * (ratio + 0.4f);
             child.setTranslationY(translation);
         }
         return true;

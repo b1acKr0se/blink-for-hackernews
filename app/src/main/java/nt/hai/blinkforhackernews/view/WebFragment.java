@@ -13,10 +13,10 @@ import android.webkit.WebView;
 
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.utility.HardwareUtils;
+import nt.hai.blinkforhackernews.view.custom.NestedWebView;
 
 public class WebFragment extends Fragment implements OnBackActionListener {
-    private View webViewContainer;
-    private WebView webView;
+    private NestedWebView webView;
     private OnUrlLoadingListener listener;
     private OnTitleChangeListener onTitleChangeListener;
     private OnBackActionCallback onBackActionCallback;
@@ -50,8 +50,7 @@ public class WebFragment extends Fragment implements OnBackActionListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web, container, false);
-        webView = (WebView) view.findViewById(R.id.web_view);
-        webViewContainer = view.findViewById(R.id.web_view_container);
+        webView = (NestedWebView) view.findViewById(R.id.nested_web_view);
         url = getArguments().getString("url");
         changeTitle(null, url);
         setUpPadding();
@@ -68,9 +67,9 @@ public class WebFragment extends Fragment implements OnBackActionListener {
     private void setUpPadding() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (HardwareUtils.hasSoftKeys(getActivity().getWindowManager())) {
-                webViewContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.recycler_padding_bottom));
+                webView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.recycler_padding_bottom));
             } else {
-                webViewContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom));
+                webView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom));
             }
         }
     }
@@ -81,6 +80,7 @@ public class WebFragment extends Fragment implements OnBackActionListener {
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
         webView.setBackgroundColor(Color.TRANSPARENT);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setWebChromeClient(new HNWebChromeClient(listener));

@@ -58,6 +58,7 @@ public class CommentFragment extends Fragment {
             }
             adapter = new CommentAdapter(getContext(), commentList);
             ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+            recyclerView.getItemAnimator().setAddDuration(0);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
