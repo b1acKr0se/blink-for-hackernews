@@ -33,7 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context context;
     private RecyclerView recyclerView;
     private ValueAnimator animator;
-    private int currentMenuPosition = -1;
+    private String currentSelectedId;
     private OnMenuCommentClickListener onMenuCommentClickListener;
 
     public CommentAdapter(Context context, RecyclerView recyclerView, List<Item> list) {
@@ -86,15 +86,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 @Override
                 public boolean onLongClick(View view) {
                     int position = items.indexOf(item);
-                    if (currentMenuPosition >= 0) {
-                        collapseAndRemove((CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(currentMenuPosition), currentMenuPosition);
-                        if (currentMenuPosition == position) {
-                            currentMenuPosition = -1;
-                            return true;
+                    if (currentSelectedId != null) {
+                        int selectedPosition = getPositionFromId(currentSelectedId);
+                        if (selectedPosition > 0) {
+                            collapseAndRemove((CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(selectedPosition), selectedPosition);
+                            if (item.getId().equals(currentSelectedId)) {
+                                currentSelectedId = null;
+                                return true;
+                            }
                         }
                     }
                     highlight(holder, position, true);
-                    currentMenuPosition = position;
+                    currentSelectedId = item.getId();
                     return true;
                 }
             });
@@ -175,8 +178,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View view) {
                 if (onMenuCommentClickListener == null) return;
-                collapseAndRemove(holder, currentMenuPosition);
-                currentMenuPosition = -1;
+                int selectedPosition = getPositionFromId(currentSelectedId);
+                if (selectedPosition < 0) return;
+                collapseAndRemove(holder, selectedPosition);
+                currentSelectedId = null;
                 switch (view.getId()) {
                     case R.id.upvote:
                         onMenuCommentClickListener.onUpvote(position);
@@ -265,6 +270,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Item it = items.get(i);
             if (item.getLevel() >= it.getLevel())
                 break;
+            it.setMenuOpened(false);
             list.add(it);
             if (currentLoadingList.contains(it.getId())) currentLoadingList.remove(it.getId());
             items.remove(i);
@@ -276,6 +282,14 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             notifyItemChanged(index);
             collapsedItem.put(item.getId(), list);
         }
+    }
+
+    private int getPositionFromId(String id) {
+        for (Item item : items) {
+            if (item.getId().equals(id))
+                return items.indexOf(item);
+        }
+        return -1;
     }
 
     private ValueAnimator slideAnimator(int start, int end, final View v) {
