@@ -10,6 +10,7 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import nt.hai.blinkforhackernews.view.adapter.CommentAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CommentFragment extends Fragment {
+public class CommentFragment extends Fragment implements OnMenuCommentClickListener {
     private RecyclerView recyclerView;
     private CommentAdapter adapter;
     private List<Item> commentList = new ArrayList<>();
@@ -56,7 +57,8 @@ public class CommentFragment extends Fragment {
                 comment.setLevel(0);
                 commentList.add(comment);
             }
-            adapter = new CommentAdapter(getContext(), commentList);
+            adapter = new CommentAdapter(getContext(), recyclerView, commentList);
+            adapter.setOnMenuCommentClickListener(this);
             ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerView.getItemAnimator().setAddDuration(0);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -73,5 +75,25 @@ public class CommentFragment extends Fragment {
                 recyclerView.setPadding(0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom), 0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom));
             }
         }
+    }
+
+    @Override
+    public void onUpvote(int position) {
+        Toast.makeText(getActivity(), "Upvoted!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProfile(int position) {
+
+    }
+
+    @Override
+    public void onReply(int position) {
+
+    }
+
+    @Override
+    public void onCopy(int position) {
+
     }
 }

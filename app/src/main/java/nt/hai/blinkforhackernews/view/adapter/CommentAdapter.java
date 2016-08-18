@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +19,10 @@ import java.util.Map;
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.data.remote.HNClient;
+import nt.hai.blinkforhackernews.view.OnMenuCommentClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnCommentClickListener {
     private static final int TYPE_HEADER = 0;
@@ -33,14 +31,21 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Item> items;
     private Map<String, List<Item>> collapsedItem;
     private Context context;
+    private RecyclerView recyclerView;
     private ValueAnimator animator;
-    private LinearLayout currentOnSelection;
+    private int currentMenuPosition = -1;
+    private OnMenuCommentClickListener onMenuCommentClickListener;
 
-    public CommentAdapter(Context context, List<Item> list) {
+    public CommentAdapter(Context context, RecyclerView recyclerView, List<Item> list) {
         this.context = context;
+        this.recyclerView = recyclerView;
         this.items = list;
         this.currentLoadingList = new ArrayList<>();
         this.collapsedItem = new HashMap<>();
+    }
+
+    public void setOnMenuCommentClickListener(OnMenuCommentClickListener onMenuCommentClickListener) {
+        this.onMenuCommentClickListener = onMenuCommentClickListener;
     }
 
     @Override
@@ -69,16 +74,27 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int marginValue = level * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
             int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
             params.setMargins(marginValue, 0, 0, marginComment);
+            if (item.isMenuOpened()) {
+                unhighlight(holder);
+                highlight(holder, position, false);
+            } else {
+                unhighlight(holder);
+            }
             holder.itemView.setLayoutParams(params);
             holder.bind(item, this, collapsedItem.containsKey(item.getId()) ? collapsedItem.get(item.getId()).size() : 0);
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (currentOnSelection != null) {
-                        collapseAndRemove(currentOnSelection);
+                    int position = items.indexOf(item);
+                    if (currentMenuPosition >= 0) {
+                        collapseAndRemove((CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(currentMenuPosition), currentMenuPosition);
+                        if (currentMenuPosition == position) {
+                            currentMenuPosition = -1;
+                            return true;
+                        }
                     }
-                    currentOnSelection = holder.menuArea;
-                    doHighLighted(holder, item);
+                    highlight(holder, position, true);
+                    currentMenuPosition = position;
                     return true;
                 }
             });
@@ -122,15 +138,122 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void doHighLighted(CommentViewHolder holder, Item item) {
+    private void highlight(CommentViewHolder holder, int position, boolean animate) {
+        Item item = items.get(position);
+        item.setMenuOpened(true);
+        holder.menuArea.removeAllViews();
+        holder.menuArea.setVisibility(View.GONE);
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         final View baseView = inflater.inflate(R.layout.item_comment_menu, holder.menuArea);
-        expand(baseView);
+        expand(baseView, position, animate);
         RecyclerView.LayoutParams params =
                 (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
         params.setMargins(0, 0, 0, 0);
         holder.itemView.setLayoutParams(params);
         holder.container.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_background_comment));
+    }
+
+    private void expand(final View v, int position, boolean animate) {
+        v.setVisibility(View.VISIBLE);
+        final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        v.measure(widthSpec, heightSpec);
+        if (animate) {
+            animator = slideAnimator(0, v.getMeasuredHeight(), v);
+            animator.start();
+        } else {
+            ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+            layoutParams.height = v.getMeasuredHeight();
+            v.setLayoutParams(layoutParams);
+        }
+        setupListener(v, position);
+    }
+
+    private void setupListener(View view, final int position) {
+        final CommentViewHolder holder = (CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onMenuCommentClickListener == null) return;
+                collapseAndRemove(holder, currentMenuPosition);
+                currentMenuPosition = -1;
+                switch (view.getId()) {
+                    case R.id.upvote:
+                        onMenuCommentClickListener.onUpvote(position);
+                        break;
+                    case R.id.profile:
+                        onMenuCommentClickListener.onProfile(position);
+                        break;
+                    case R.id.reply:
+                        onMenuCommentClickListener.onReply(position);
+                        break;
+                    case R.id.copy:
+                        onMenuCommentClickListener.onCopy(position);
+                        break;
+                }
+            }
+        };
+        view.findViewById(R.id.upvote).setOnClickListener(listener);
+        view.findViewById(R.id.profile).setOnClickListener(listener);
+        view.findViewById(R.id.reply).setOnClickListener(listener);
+        view.findViewById(R.id.copy).setOnClickListener(listener);
+    }
+
+    private void unhighlight(CommentViewHolder holder) {
+        holder.menuArea.removeAllViews();
+        holder.menuArea.setVisibility(View.GONE);
+        holder.container.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+    }
+
+    private void collapseAndRemove(final CommentViewHolder holder, int position) {
+        Item item = items.get(position);
+        item.setMenuOpened(false);
+        if (holder == null) return;
+        holder.container.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+        int finalHeight = holder.menuArea.getHeight();
+        animator = slideAnimator(finalHeight, 0, holder.menuArea);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                holder.menuArea.removeAllViews();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                holder.menuArea.removeAllViews();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animator.start();
+        final int level = item.getLevel();
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+        int marginValue = level * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
+        int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
+        params.setMargins(marginValue, 0, 0, marginComment);
+    }
+
+    private void expandComment(Item item) {
+        int index = items.indexOf(item);
+        if (index < 0 || index > getItemCount()) return;
+        if (collapsedItem.containsKey(item.getId())) {
+            List<Item> collapsed = collapsedItem.get(item.getId());
+            int i = index + 1;
+            for (int j = collapsed.size() - 1; j >= 0; j--) {
+                items.add(i, collapsed.get(j));
+            }
+            collapsedItem.remove(item.getId());
+            notifyItemRangeInserted(i, collapsed.size());
+            item.setExpanded(true);
+            notifyItemChanged(index);
+        }
     }
 
     private void collapseComment(Item item) {
@@ -155,31 +278,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void expandComment(Item item) {
-        int index = items.indexOf(item);
-        if (index < 0 || index > getItemCount()) return;
-        if (collapsedItem.containsKey(item.getId())) {
-            List<Item> collapsed = collapsedItem.get(item.getId());
-            int i = index + 1;
-            for (int j = collapsed.size() - 1; j >= 0; j--) {
-                items.add(i, collapsed.get(j));
-            }
-            collapsedItem.remove(item.getId());
-            notifyItemRangeInserted(i, collapsed.size());
-            item.setExpanded(true);
-            notifyItemChanged(index);
-        }
-    }
-
-    private void expand(final View l) {
-        l.setVisibility(View.VISIBLE);
-        final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        l.measure(widthSpec, heightSpec);
-        animator = slideAnimator(0, l.getMeasuredHeight(), l);
-        animator.start();
-    }
-
     private ValueAnimator slideAnimator(int start, int end, final View v) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
         animator.setInterpolator(new FastOutSlowInInterpolator());
@@ -194,31 +292,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
         return animator;
     }
-
-    private void collapseAndRemove(final View v) {
-        int finalHeight = v.getHeight();
-        animator = slideAnimator(finalHeight, 0, v);
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                ((LinearLayout) v).removeAllViews();
-            }
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                ((LinearLayout) v).removeAllViews();
-            }
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        animator.start();
-    }
-
 
     @Override
     public int getItemCount() {

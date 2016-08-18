@@ -61,6 +61,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         }
     }
 
+    public void removeItem(int position) {
+        items.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, items.size());
+    }
+
+    public void updateItem(int position) {
+        items.get(position).setTitle("Upvoted!");
+        notifyItemChanged(position);
+    }
+
     @Override
     public int getItemCount() {
         return items.size();

@@ -28,6 +28,7 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private OnBackActionListener onBackActionListener;
+    private Item item;
 
     public static void navigate(Context context, Item item) {
         Intent intent = new Intent(context, DetailActivity.class);
@@ -68,26 +69,38 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
 
     private void readIntent() {
         Intent intent = getIntent();
-        Item item = (Item) intent.getExtras().getSerializable("item");
+        item = (Item) intent.getExtras().getSerializable("item");
+        createWebFragment();
+        createCommentFragment();
+        navigateToWeb();
+    }
+
+    private void createWebFragment() {
         webFragment = WebFragment.newInstance(item.getUrl());
         webFragment.setOnUrlLoadingListener(this);
         webFragment.setOnTitleChangeListener(this);
         webFragment.setOnBackActionCallback(this);
         setOnBackActionListener(webFragment);
+    }
+
+    private void createCommentFragment() {
         commentFragment = CommentFragment.newInstance(item);
-        navigateToWeb();
     }
 
     void navigateToWeb() {
         appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (webFragment != null && webFragment.isAdded())
-            fragmentTransaction.show(webFragment);
-        else
+        if (webFragment != null) {
+            if (webFragment.isAdded()) fragmentTransaction.show(webFragment);
+            else
+                fragmentTransaction.add(R.id.container, webFragment, "Web");
+        } else {
+            createWebFragment();
             fragmentTransaction.add(R.id.container, webFragment, "Web");
-        if (commentFragment != null && commentFragment.isAdded())
-            fragmentTransaction.hide(commentFragment);
+        }
+        if (commentFragment != null)
+            if (commentFragment.isAdded()) fragmentTransaction.hide(commentFragment);
         fragmentTransaction.commit();
     }
 
@@ -95,12 +108,16 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
         appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (commentFragment != null && commentFragment.isAdded())
-            fragmentTransaction.show(commentFragment);
-        else
+        if (commentFragment != null) {
+            if (commentFragment.isAdded()) fragmentTransaction.show(commentFragment);
+            else
+                fragmentTransaction.add(R.id.container, commentFragment, "Comment");
+        } else {
+            createCommentFragment();
             fragmentTransaction.add(R.id.container, commentFragment, "Comment");
-        if (webFragment != null && webFragment.isAdded())
-            fragmentTransaction.hide(webFragment);
+        }
+        if (webFragment != null)
+            if (webFragment.isAdded()) fragmentTransaction.hide(webFragment);
         fragmentTransaction.commit();
     }
 
@@ -136,7 +153,8 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
         getSupportActionBar().setSubtitle(subtitle);
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackActionListener.onBack();
@@ -145,7 +163,8 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override public void onCallback() {
+    @Override
+    public void onCallback() {
         finish();
     }
 }
