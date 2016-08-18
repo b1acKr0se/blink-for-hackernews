@@ -71,9 +71,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             final CommentViewHolder holder = (CommentViewHolder) viewHolder;
             final int level = item.getLevel();
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-            int marginValue = level * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
             int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
-            params.setMargins(marginValue, 0, 0, marginComment);
+            if (level > 1) {
+                int marginValue = (level - 1) * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
+                params.setMargins(marginValue, 0, 0, marginComment);
+            } else {
+                params.setMargins(0, 0, 0, marginComment);
+            }
             if (item.isMenuOpened()) {
                 unhighlight(holder);
                 highlight(holder, position, false);
@@ -82,7 +86,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             holder.itemView.setLayoutParams(params);
             holder.bind(item, this, collapsedItem.containsKey(item.getId()) ? collapsedItem.get(item.getId()).size() : 0);
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     int position = items.indexOf(item);
@@ -100,7 +105,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     currentSelectedId = item.getId();
                     return true;
                 }
-            });
+            };
+            holder.itemView.setOnLongClickListener(onLongClickListener);
+            holder.content.setOnLongClickListener(onLongClickListener);
             if (!item.isLoaded() && !currentLoadingList.contains(item.getId())) {
                 currentLoadingList.add(item.getId());
                 HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {

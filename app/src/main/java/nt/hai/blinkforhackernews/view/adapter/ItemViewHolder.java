@@ -7,7 +7,7 @@ import android.widget.TextView;
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.utility.DateUtils;
-import nt.hai.blinkforhackernews.utility.UrlUtils;
+import nt.hai.blinkforhackernews.utility.LinkUtils;
 import nt.hai.blinkforhackernews.view.ItemClickListener;
 import nt.hai.blinkforhackernews.view.custom.MultiSizeTextView;
 
@@ -30,7 +30,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
         this.listener = listener;
         this.position = position;
         if (!item.isLoaded()) {
-            titleAndLinkTextView.setTitle("-").setLink(UrlUtils.getHostName("-")).draw();
+            titleAndLinkTextView.setTitle("-").setLink(LinkUtils.getHostName("-")).draw();
             authorTextView.setText("-");
             timeTextView.setText("-");
             scoreTextView.setText("-");
@@ -38,7 +38,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
             return;
         }
         itemView.setOnClickListener(this);
-        titleAndLinkTextView.setTitle(item.getTitle()).setLink(UrlUtils.getHostName(item.getUrl())).draw();
+        titleAndLinkTextView.setTitle(item.getTitle()).setLink(LinkUtils.getHostName(item.getUrl())).draw();
         authorTextView.setText(item.getBy());
         timeTextView.setText(DateUtils.getReadableDate(item.getTime()));
         scoreTextView.setText(String.valueOf(item.getScore()));

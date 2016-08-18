@@ -26,6 +26,7 @@
                 app:theme="@style/ToolbarStyle">
 
             </android.support.v7.widget.Toolbar>
+
         </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -44,6 +45,15 @@
         android:layout_gravity="bottom|right"
         app:layout_behavior="nt.hai.blinkforhackernews.view.custom.CircularProgressLayoutBehavior">
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_margin="24dp"
+            app:srcCompat="@drawable/ic_comment_24dp"
+            android:tint="@android:color/white"/>
+
         <ProgressBar
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -55,16 +65,8 @@
             android:max="100"
             android:progress="0"
             android:progressDrawable="@drawable/progress_bar_drawable"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_action_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:layout_margin="24dp"
-            android:src="@drawable/ic_comment_24dp"
-            android:tint="@android:color/white"/>
     </nt.hai.blinkforhackernews.view.custom.CircularProgressLayout>
+
 
 
 </android.support.design.widget.CoordinatorLayout>
