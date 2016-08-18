@@ -10,9 +10,35 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/edit"
-        app:srcCompat="@drawable/ic_comment_black"
-        android:tint="@android:color/white"
+        android:id="@+id/upvote"
+        app:srcCompat="@drawable/ic_arrow_upvote_white"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:padding="12dp"/>
+
+    <ImageView
+        android:id="@+id/profile"
+        app:srcCompat="@drawable/ic_person_white"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:padding="12dp"/>
+
+    <ImageView
+        android:id="@+id/reply"
+        app:srcCompat="@drawable/ic_reply_white"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:padding="12dp"/>
+
+    <ImageView
+        android:id="@+id/copy"
+        app:srcCompat="@drawable/ic_copy_white"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"

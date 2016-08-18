@@ -21,6 +21,7 @@ public class Item implements Serializable {
     private boolean isLoaded;
     private int level;
     private boolean isExpanded = true;
+    private boolean isMenuOpened;
 
     public String getId() {
         return id;
@@ -158,6 +159,14 @@ public class Item implements Serializable {
         isExpanded = expanded;
     }
 
+    public boolean isMenuOpened() {
+        return isMenuOpened;
+    }
+
+    public void setMenuOpened(boolean menuOpened) {
+        isMenuOpened = menuOpened;
+    }
+
     public void copy(Item item) {
         id = item.getId();
         deleted = item.isDeleted();
@@ -176,6 +185,7 @@ public class Item implements Serializable {
         isLoaded = item.isLoaded();
         level = item.getLevel();
         isExpanded = item.isExpanded();
+        isMenuOpened = item.isMenuOpened();
     }
 
     @Override
