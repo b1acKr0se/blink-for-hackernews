@@ -1,11 +1,10 @@
 package nt.hai.blinkforhackernews.view;
 
 import android.graphics.Bitmap;
-import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import nt.hai.blinkforhackernews.utility.UrlUtils;
+import nt.hai.blinkforhackernews.utility.LinkUtils;
 
 
 public class HNWebViewClient extends WebViewClient {
@@ -26,7 +25,7 @@ public class HNWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         if (onTitleChangeListener == null)
             return;
-        onTitleChangeListener.onTitleChange(view.getTitle(), UrlUtils.getHostName(url));
+        onTitleChangeListener.onTitleChange(view.getTitle(), LinkUtils.getHostName(url));
     }
 
     @Override

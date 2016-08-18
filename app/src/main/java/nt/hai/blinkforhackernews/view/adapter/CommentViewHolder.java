@@ -1,9 +1,7 @@
 package nt.hai.blinkforhackernews.view.adapter;
 
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -15,10 +13,11 @@ import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
 import nt.hai.blinkforhackernews.utility.ColorCode;
 import nt.hai.blinkforhackernews.utility.DateUtils;
+import nt.hai.blinkforhackernews.utility.LinkUtils;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final StrikethroughSpan STRIKE_THROUGH_SPAN = new StrikethroughSpan();
-    private TextView author, time, content, collapseNumber;
+    public TextView author, time, content, collapseNumber;
     public View level;
     public View container;
     private Context context;
@@ -42,7 +41,11 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     public void bind(Item item, OnCommentClickListener listener, int collapse) {
         this.onCommentClickListener = listener;
         this.item = item;
-        level.setBackgroundColor(ColorCode.getInstance(context).getColor(item.getLevel()));
+        if (item.getLevel() > 0) {
+            level.setVisibility(View.VISIBLE);
+            level.setBackgroundColor(ColorCode.getInstance(context).getColor(item.getLevel()));
+        } else
+            level.setVisibility(View.GONE);
         if (!item.isLoaded()) {
             author.setText("...");
             content.setText("...");
@@ -58,7 +61,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         itemView.setOnClickListener(this);
         author.setText(item.getBy());
         time.setText(DateUtils.getReadableDate(item.getTime()));
-        content.setText(Html.fromHtml(item.getText() == null ? "" : item.getText()));
+        LinkUtils.setTextWithLinks(content, LinkUtils.fromHtml(item.getText(), false));
         content.setOnClickListener(this);
         if (!item.isExpanded() && item.getKids() != null) {
             collapseNumber.setVisibility(View.VISIBLE);
