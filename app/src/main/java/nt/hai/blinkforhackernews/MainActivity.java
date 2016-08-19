@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import nt.hai.blinkforhackernews.utility.HardwareUtils;
 import nt.hai.blinkforhackernews.view.OnTitleClickListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -51,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setUpPadding() {
+        if (HardwareUtils.hasSoftKeys(getWindowManager())) {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("pref_has_softkey", true).apply();
+        } else {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("pref_has_softkey", false).apply();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             findViewById(R.id.coordinator_layout).setPadding(0, getResources().getDimensionPixelSize(R.dimen.coordinator_layout_padding_top), 0, 0);
             findViewById(R.id.toolbar_container).setPadding(0, getResources().getDimensionPixelSize(R.dimen.toolbar_container_padding_top), 0, 0);
