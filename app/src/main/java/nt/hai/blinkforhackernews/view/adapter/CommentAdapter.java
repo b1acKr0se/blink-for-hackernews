@@ -86,7 +86,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             holder.itemView.setLayoutParams(params);
             holder.bind(item, this, collapsedItem.containsKey(item.getId()) ? collapsedItem.get(item.getId()).size() : 0);
-
             View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -106,8 +105,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     return true;
                 }
             };
-            holder.itemView.setOnLongClickListener(onLongClickListener);
-            holder.content.setOnLongClickListener(onLongClickListener);
+            if (item.isDeleted() || !item.isLoaded()) {
+                holder.itemView.setOnLongClickListener(null);
+                holder.content.setOnLongClickListener(null);
+            } else {
+                holder.itemView.setOnLongClickListener(onLongClickListener);
+                holder.content.setOnLongClickListener(onLongClickListener);
+            }
             if (!item.isLoaded() && !currentLoadingList.contains(item.getId())) {
                 currentLoadingList.add(item.getId());
                 HNClient.getInstance().getItem(item.getId()).enqueue(new Callback<Item>() {
@@ -247,9 +251,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         animator.start();
         final int level = item.getLevel();
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-        int marginValue = level * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
         int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
-        params.setMargins(marginValue, 0, 0, marginComment);
+        if (level > 1) {
+            int marginValue = (level - 1) * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
+            params.setMargins(marginValue, 0, 0, marginComment);
+        } else {
+            params.setMargins(0, 0, 0, marginComment);
+        }
     }
 
     private void expandComment(Item item) {
