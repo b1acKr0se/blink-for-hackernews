@@ -24,6 +24,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     private OnCommentClickListener onCommentClickListener;
     private Item item;
     public LinearLayout menuArea;
+    private static final long CLICK_TIME_INTERVAL = 500;
+    private long lastClickTime = System.currentTimeMillis();
 
 
     public CommentViewHolder(View view) {
@@ -80,6 +82,11 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onClick(View view) {
+        long now = System.currentTimeMillis();
+        if (now - lastClickTime < CLICK_TIME_INTERVAL) {
+            return;
+        }
+        lastClickTime = now;
         switch (view.getId()) {
             case R.id.comment_content:
                 if (content.getSelectionStart() < 0 && content.getSelectionEnd() < 0) {
