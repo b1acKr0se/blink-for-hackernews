@@ -3,6 +3,7 @@ package nt.hai.blinkforhackernews.view;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,8 @@ public class WebFragment extends Fragment implements OnBackActionListener {
 
     private void setUpPadding() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (HardwareUtils.hasSoftKeys(getActivity().getWindowManager())) {
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getBoolean("pref_has_softkey", false)) {
                 webView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.recycler_padding_bottom));
             } else {
                 webView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom));

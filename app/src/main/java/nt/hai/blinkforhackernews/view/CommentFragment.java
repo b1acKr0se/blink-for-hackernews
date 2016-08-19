@@ -3,6 +3,7 @@ package nt.hai.blinkforhackernews.view;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,7 +70,8 @@ public class CommentFragment extends Fragment implements OnMenuCommentClickListe
 
     private void setUpPadding() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (HardwareUtils.hasSoftKeys(getActivity().getWindowManager())) {
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getBoolean("pref_has_softkey", false)) {
                 recyclerView.setPadding(0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom), 0, getResources().getDimensionPixelSize(R.dimen.recycler_padding_bottom));
             } else {
                 recyclerView.setPadding(0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom), 0, getResources().getDimensionPixelSize(R.dimen.normal_padding_bottom));
