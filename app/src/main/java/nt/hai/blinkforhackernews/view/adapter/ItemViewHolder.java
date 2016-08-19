@@ -12,10 +12,12 @@ import nt.hai.blinkforhackernews.view.ItemClickListener;
 import nt.hai.blinkforhackernews.view.custom.MultiSizeTextView;
 
 class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static final long CLICK_TIME_INTERVAL = 500;
     private MultiSizeTextView titleAndLinkTextView;
     private TextView authorTextView, timeTextView, scoreTextView, commentTextView;
     private ItemClickListener listener;
     private int position;
+    private long lastClickTime = System.currentTimeMillis();
 
     ItemViewHolder(View itemView) {
         super(itemView);
@@ -47,6 +49,13 @@ class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (listener != null) listener.onItemClick(position);
+        if (listener != null) {
+            long now = System.currentTimeMillis();
+            if (now - lastClickTime < CLICK_TIME_INTERVAL) {
+                return;
+            }
+            lastClickTime = now;
+            listener.onItemClick(position);
+        }
     }
 }
