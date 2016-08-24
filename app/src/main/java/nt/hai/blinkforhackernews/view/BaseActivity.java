@@ -3,6 +3,7 @@ package nt.hai.blinkforhackernews.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 
 import nt.hai.blinkforhackernews.swipelayout.SwipeBackLayout;
 import nt.hai.blinkforhackernews.swipelayout.Utils;
@@ -18,7 +19,10 @@ public class BaseActivity extends AppCompatActivity implements SwipeBackActivity
         super.onCreate(savedInstanceState);
         helper = new SwipeBackActivityHelper(this);
         helper.onActivityCreate();
-        helper.getSwipeBackLayout().mDragHelper.override = false;
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        helper.getSwipeBackLayout().mDragHelper.override = true;
+        helper.getSwipeBackLayout().setEdgeSize(metrics.widthPixels);
+
     }
 
     @Override

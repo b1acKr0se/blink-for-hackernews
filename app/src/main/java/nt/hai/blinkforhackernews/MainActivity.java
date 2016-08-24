@@ -17,19 +17,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import nt.hai.blinkforhackernews.utility.HardwareUtils;
+import nt.hai.blinkforhackernews.view.BaseActivity;
 import nt.hai.blinkforhackernews.view.OnTitleClickListener;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     private OnTitleClickListener onTitleClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("pref_dark_theme", false)) {
-            setTheme(R.style.AppTheme_Dark);
+            setTheme(R.style.MainTheme_Dark);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSwipeBackEnable(false);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

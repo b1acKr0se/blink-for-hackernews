@@ -38,35 +38,16 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <nt.hai.blinkforhackernews.view.custom.CircularProgressLayout
-        android:id="@+id/button_container"
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        app:layout_behavior="nt.hai.blinkforhackernews.view.custom.CircularProgressLayoutBehavior">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_action_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:layout_margin="24dp"
-            app:srcCompat="@drawable/ic_comment_24dp"
-            android:tint="@android:color/white"/>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_gravity="center"
-            android:background="@drawable/progress_bar_background"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/progress_bar_drawable"/>
-    </nt.hai.blinkforhackernews.view.custom.CircularProgressLayout>
-
+        android:layout_margin="24dp"
+        android:tint="@android:color/white"
+        app:layout_behavior="nt.hai.blinkforhackernews.view.custom.FabBehavior"
+        app:srcCompat="@drawable/ic_comment_24dp"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

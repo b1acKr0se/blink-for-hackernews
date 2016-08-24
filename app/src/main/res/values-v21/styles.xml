@@ -16,6 +16,12 @@
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>
         <item name="android:textColorSecondaryInverse">@color/textColorSecondaryInverse</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="contentColor">@android:color/black</item>
+    </style>
+
+    <style name="MainTheme" parent="AppTheme" >
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
@@ -33,6 +39,11 @@
         <item name="android:textColorSecondary">@color/textColorSecondaryInverse</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimary</item>
         <item name="android:textColorSecondaryInverse">@color/textColorSecondary</item>
+        <item name="contentColor">@android:color/white</item>
+    </style>
+
+    <style name="MainTheme.Dark" parent="AppTheme.Dark" >
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
 </resources>

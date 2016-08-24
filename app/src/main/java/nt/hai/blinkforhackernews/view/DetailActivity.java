@@ -1,28 +1,27 @@
 package nt.hai.blinkforhackernews.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import nt.hai.blinkforhackernews.R;
 import nt.hai.blinkforhackernews.data.model.Item;
-import nt.hai.blinkforhackernews.utility.HardwareUtils;
+import nt.hai.blinkforhackernews.view.chromecustomtab.CustomTabActivityHelper;
 
 public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingListener, View.OnClickListener, OnTitleChangeListener, OnBackActionCallback {
-    private View buttonContainer;
-    private ProgressBar progressBar;
     private FloatingActionButton floatingActionButton;
     private WebFragment webFragment;
     private CommentFragment commentFragment;
@@ -42,27 +41,39 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCompat.postponeEnterTransition(this);
         setContentView(R.layout.activity_detail);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        buttonContainer = findViewById(R.id.button_container);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        findViewById(R.id.container).setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(this);
         setUpPadding();
         readIntent();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void setUpPadding() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             findViewById(R.id.coordinator_layout).setPadding(0, getResources().getDimensionPixelSize(R.dimen.coordinator_layout_padding_top), 0, 0);
             findViewById(R.id.toolbar_container).setPadding(0, getResources().getDimensionPixelSize(R.dimen.toolbar_container_padding_top), 0, 0);
-            if (PreferenceManager.getDefaultSharedPreferences(this)
-                    .getBoolean("pref_has_softkey", false)) {
-                buttonContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.recycler_padding_bottom));
-            }
         } else {
             findViewById(R.id.coordinator_layout).setPadding(0, 0, 0, 0);
             findViewById(R.id.toolbar_container).setPadding(0, 0, 0, 0);
@@ -72,9 +83,9 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     private void readIntent() {
         Intent intent = getIntent();
         item = (Item) intent.getExtras().getSerializable("item");
-        createWebFragment();
+//        createWebFragment();
         createCommentFragment();
-        navigateToWeb();
+        navigateToComment();
     }
 
     private void createWebFragment() {
@@ -90,9 +101,11 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     }
 
     void navigateToWeb() {
+        findViewById(R.id.container).setVisibility(View.VISIBLE);
         appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, 0, 0, 0);
         if (webFragment != null) {
             if (webFragment.isAdded()) fragmentTransaction.show(webFragment);
             else
@@ -107,9 +120,11 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     }
 
     void navigateToComment() {
+        findViewById(R.id.container).setVisibility(View.VISIBLE);
         appBarLayout.setExpanded(true, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, 0, 0, 0);
         if (commentFragment != null) {
             if (commentFragment.isAdded()) fragmentTransaction.show(commentFragment);
             else
@@ -129,19 +144,24 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
 
     @Override
     public void onProgressChanged(int progress) {
-        progressBar.setVisibility(progress == 100 ? View.INVISIBLE : View.VISIBLE);
-        progressBar.setProgress(progress);
+//        progressBar.setVisibility(progress == 100 ? View.INVISIBLE : View.VISIBLE);
+//        progressBar.setProgress(progress);
     }
 
     @Override
     public void onClick(View view) {
+        Uri uri = Uri.parse(item.getUrl());
         switch (view.getId()) {
             case R.id.floating_action_button:
-                if (webFragment != null && !webFragment.isHidden()) {
-                    navigateToComment();
-                } else if (webFragment != null && webFragment.isHidden()) {
-                    navigateToWeb();
-                }
+                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary)).setStartAnimations(this, 0, 0).setExitAnimations(this, 0, R.anim.fade_out).build();
+                CustomTabActivityHelper.openCustomTab(this, customTabsIntent, uri,
+                        new CustomTabActivityHelper.CustomTabFallback() {
+                            @Override
+                            public void openUri(Activity activity, Uri uri) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                activity.startActivity(intent);
+                            }
+                        });
                 break;
 
         }
@@ -159,7 +179,7 @@ public class DetailActivity extends AnimBaseActivity implements OnUrlLoadingList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackActionListener.onBack();
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
