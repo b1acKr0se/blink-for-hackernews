@@ -55,7 +55,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
                 return;
             }
             lastClickTime = now;
-            listener.onItemClick(position);
+            listener.onItemClick(view, position);
         }
     }
 }

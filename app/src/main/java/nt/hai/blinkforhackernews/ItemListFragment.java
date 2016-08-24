@@ -1,8 +1,11 @@
 package nt.hai.blinkforhackernews;
 
-
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +35,7 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener, 
     private int[] responseId;
     private List<Item> itemList = new ArrayList<>();
     private ItemAdapter adapter;
+    private Paint p = new Paint();
 
     public ItemListFragment() {
     }
@@ -124,7 +128,7 @@ public class ItemListFragment extends Fragment implements OnTitleClickListener, 
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(View view, int position) {
         Item item = itemList.get(position);
         if (!item.isLoaded()) return;
         DetailActivity.navigate(getContext(), item);

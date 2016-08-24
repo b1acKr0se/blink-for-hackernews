@@ -1,6 +1,7 @@
 package nt.hai.blinkforhackernews.view.custom;
 
 import android.content.Context;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -40,10 +41,14 @@ public class CircularProgressLayoutBehavior extends CoordinatorLayout.Behavior<C
             int distanceToScroll = child.getHeight();
             float ratio = dependency.getY() / (float) toolbarHeight;
             float translation;
-            if (hasSoftkey) {
-                translation = -distanceToScroll * (ratio + 0.38f);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (hasSoftkey) {
+                    translation = -distanceToScroll * (ratio + 0.38f);
+                } else {
+                    translation = -distanceToScroll * (ratio + 0.4f);
+                }
             } else {
-                translation = -distanceToScroll * (ratio + 0.4f);
+                translation = -distanceToScroll * ratio;
             }
             child.setTranslationY(translation);
         }

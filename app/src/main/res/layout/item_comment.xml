@@ -40,7 +40,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingRight="4dp"
-                        android:textSize="13sp"
+                        android:textSize="11sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -48,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/comment_author"
-                        android:textSize="13sp"/>
+                        android:textSize="11sp"/>
 
                     <TextView
                         android:id="@+id/comment_collapse_item"
@@ -75,7 +75,8 @@
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:textColor="?attr/contentColor"/>
 
 
             </LinearLayout>

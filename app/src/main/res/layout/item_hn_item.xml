@@ -2,11 +2,13 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
     android:padding="8dp"
-    android:orientation="vertical">
+    android:transitionName="@string/transition_string">
 
     <nt.hai.blinkforhackernews.view.custom.MultiSizeTextView
         android:id="@+id/item_title_link"
@@ -44,30 +46,38 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="4dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            app:srcCompat="?attr/themedUpvoteDrawable"/>
 
         <TextView
             android:id="@+id/item_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="?attr/themedUpvoteDrawable"
-            android:drawablePadding="2dp"
-            android:drawableStart="?attr/themedUpvoteDrawable"
             android:gravity="center_vertical"
+            android:paddingLeft="2dp"
             android:textSize="11sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            app:srcCompat="?attr/themedCommentDrawable"/>
 
         <TextView
             android:id="@+id/item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="?attr/themedCommentDrawable"
-            android:drawablePadding="2dp"
-            android:drawableStart="?attr/themedCommentDrawable"
             android:gravity="center_vertical"
-            android:paddingLeft="8dp"
+            android:paddingLeft="2dp"
             android:textSize="11sp"/>
     </LinearLayout>
 

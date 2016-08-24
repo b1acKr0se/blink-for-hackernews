@@ -52,6 +52,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
             author.setText("...");
             content.setText("...");
             time.setText("");
+            collapseNumber.setVisibility(View.GONE);
             return;
         }
         if (item.isDeleted()) {

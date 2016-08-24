@@ -1,7 +1,6 @@
 package nt.hai.blinkforhackernews.utility;
 
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.text.Html;
 import android.text.Layout;
@@ -72,7 +71,6 @@ public class LinkUtils {
                     ClickableSpan[] link = Spannable.Factory.getInstance()
                             .newSpannable(widget.getText())
                             .getSpans(off, off, ClickableSpan.class);
-
                     if (link.length != 0) {
                         if (action == MotionEvent.ACTION_UP) {
                             link[0].onClick(widget);
