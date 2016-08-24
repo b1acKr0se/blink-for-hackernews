@@ -226,6 +226,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Item item = items.get(position);
         item.setMenuOpened(false);
         if (holder == null) return;
+        final int level = item.getLevel();
         holder.container.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
         int finalHeight = holder.menuArea.getHeight();
         animator = slideAnimator(finalHeight, 0, holder.menuArea);
@@ -237,6 +238,25 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onAnimationEnd(Animator animator) {
                 holder.menuArea.removeAllViews();
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+                int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
+                int marginValue;
+                if (level > 1) {
+                    marginValue = (level - 1) * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
+                    params.bottomMargin = marginComment;
+                    ValueAnimator anim = ValueAnimator.ofInt(params.leftMargin, marginValue);
+                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            params.leftMargin = (Integer) valueAnimator.getAnimatedValue();
+                            holder.itemView.requestLayout();
+                        }
+                    });
+                    anim.setDuration(300);
+                    anim.start();
+                } else {
+                    params.setMargins(0, 0, 0, marginComment);
+                }
             }
 
             @Override
@@ -250,15 +270,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
         animator.start();
-        final int level = item.getLevel();
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-        int marginComment = context.getResources().getDimensionPixelSize(R.dimen.padding_card_comment);
-        if (level > 1) {
-            int marginValue = (level - 1) * context.getResources().getDimensionPixelSize(R.dimen.view_level_indicator);
-            params.setMargins(marginValue, 0, 0, marginComment);
-        } else {
-            params.setMargins(0, 0, 0, marginComment);
-        }
     }
 
     private void expandComment(Item item) {
